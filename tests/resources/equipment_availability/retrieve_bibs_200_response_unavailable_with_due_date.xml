@@ -1,0 +1,83 @@
+<!--
+  200 Success Response from "Retrieve Bibs" endpoint for mms_id 990062909040108238
+  Item is unavailable with a due date of 12/14/2023 18:47:54 EST
+
+  $ export ALMA_API_KEY=<Alma API Key from "CP-prod-all-read" in LastPass>
+  $ export MMS_IDS=990062909040108238
+  $ curl "https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs?apikey=$ALMA_API_KEY&view=full&expand=p_avail&mms_id=$MMS_IDS"
+-->
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bibs total_record_count="1">
+  <bib>
+    <mms_id>990062909040108238</mms_id>
+    <record_format>marc21</record_format>
+    <linked_record_id/>
+    <title>TLC EXTERNAL FLOPPY DISK DRIVE</title>
+    <author>McKeldin User Services</author>
+    <network_numbers>
+      <network_number>(Aleph)006290904MAI01</network_number>
+    </network_numbers>
+    <place_of_publication>TLC Tech Desk</place_of_publication>
+    <date_of_publication>2022</date_of_publication>
+    <holdings link="https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs/990062909040108238/holdings"/>
+    <created_by>import</created_by>
+    <created_date>2023-10-02Z</created_date>
+    <suppress_from_publishing>true</suppress_from_publishing>
+    <suppress_from_external_search>false</suppress_from_external_search>
+    <suppress_from_metadoor>false</suppress_from_metadoor>
+    <rank>39</rank>
+    <sync_with_oclc>NONE</sync_with_oclc>
+    <sync_with_libraries_australia>NONE</sync_with_libraries_australia>
+    <originating_system>ILS</originating_system>
+    <originating_system_id>006290904-MAI01</originating_system_id>
+    <cataloging_level desc="Default Level">00</cataloging_level>
+    <brief_level desc="02">02</brief_level>
+    <record>
+      <leader>     nam a22     3u 4500</leader>
+      <controlfield tag="001">990062909040108238</controlfield>
+      <controlfield tag="005">20230205211247.0</controlfield>
+      <controlfield tag="008">220824s2022                  000   eng d</controlfield>
+      <datafield ind1=" " ind2=" " tag="035">
+        <subfield code="a">(Aleph)006290904MAI01</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="099">
+        <subfield code="a">FLOPPY DRIVE 1</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="100">
+        <subfield code="a">McKeldin User Services</subfield>
+      </datafield>
+      <datafield ind1=" " ind2="0" tag="245">
+        <subfield code="a">TLC EXTERNAL FLOPPY DISK DRIVE</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="260">
+        <subfield code="a">TLC Tech Desk</subfield>
+        <subfield code="c">2022</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="500">
+        <subfield code="a">New record created, old record circulated 6 times.</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="951">
+        <subfield code="a">006290904</subfield>
+        <subfield code="9">LOCAL</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="953">
+        <subfield code="a">CIRC-CREATED</subfield>
+      </datafield>
+      <datafield ind1=" " ind2=" " tag="AVA">
+        <subfield code="0">990062909040108238</subfield>
+        <subfield code="8">2227047500008238</subfield>
+        <subfield code="a">01USMAI_UMCP</subfield>
+        <subfield code="b">CPMCK</subfield>
+        <subfield code="c">Circulating Equipment</subfield>
+        <subfield code="d">TLC FLOPPY DRIVE 1</subfield>
+        <subfield code="e">unavailable</subfield>
+        <subfield code="f">1</subfield>
+        <subfield code="g">1</subfield>
+        <subfield code="j">ASCEQ</subfield>
+        <subfield code="k">#</subfield>
+        <subfield code="p">1</subfield>
+        <subfield code="q">UMCP McKeldin Library</subfield>
+      </datafield>
+    </record>
+  </bib>
+</bibs>

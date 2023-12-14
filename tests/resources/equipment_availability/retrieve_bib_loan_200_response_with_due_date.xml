@@ -1,0 +1,38 @@
+<!--
+  200 Success Response from "Retrieve Bib Loan information" endpoint
+  for mms_id 990062909040108238
+
+  Item is unavailable with a due date of 12/14/2023 18:47:54 EST
+
+  $ export ALMA_API_KEY=<Alma API Key from "CP-prod-all-read" in LastPass>
+  $ export MMS_IDS=990062909040108238
+  $ curl "https://api-na.hosted.exlibrisgroup.com/almaws/v1/bibs/990062909040108238/loans?apikey=$ALMA_API_KEY&order_by=due_date&direction=asc"
+-->
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<item_loans total_record_count="1">
+  <item_loan>
+    <loan_id>1909188230008238</loan_id>
+    <circ_desk desc="Library Services Desk">DEFAULT_CIRC_DESK</circ_desk>
+    <return_circ_desk/>
+    <library desc="UMCP McKeldin Library">CPMCK</library>
+    <user_id>exl_umcp</user_id>
+    <item_barcode>31430051487017</item_barcode>
+    <due_date>2023-12-14T23:47:54Z</due_date>
+    <loan_status>Active</loan_status>
+    <loan_date>2023-12-14T17:47:54.155Z</loan_date>
+    <returned_by></returned_by>
+    <process_status>NORMAL</process_status>
+    <mms_id>990062909040108238</mms_id>
+    <holding_id>2227047500008238</holding_id>
+    <item_id>2327047490008238</item_id>
+    <title>TLC EXTERNAL FLOPPY DISK DRIVE</title>
+    <author>McKeldin User Services</author>
+    <description>USB External 3.5 Floppy Disk Drive</description>
+    <publication_year>2022</publication_year>
+    <location_code name="Circulating Equipment">ASCEQ</location_code>
+    <item_policy description="Accessory Equipment">30</item_policy>
+    <call_number>TLC FLOPPY DRIVE 1</call_number>
+    <renewable>false</renewable>
+    <last_renew_status desc=""/>
+  </item_loan>
+</item_loans>

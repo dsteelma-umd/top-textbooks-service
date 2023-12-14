@@ -1,2 +1,3 @@
 host: "https://api-na.hosted.exlibrisgroup.com"
-endpoint: "/almaws/v1/bibs"
+retrieve_bibs_endpoint: "/almaws/v1/bibs"
+retrieve_bib_loan_endpoint: "/almaws/v1/bibs/{MMS_ID}/loan"
