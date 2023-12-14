@@ -1,11 +1,11 @@
-# top-textbook-service
+# equipment-availability-service
 
-Top-Textbook Service for Drupal
+Equipment Availability Service for Drupal
 
 ## Purpose
 
-This is a flask microservice for handling textbook availability in Drupal. It
-will make requests to the Alma API to retrieve metadata.
+Flask microservice for retrieving Equipment Availability information from
+the Alma API, based on requests from Drupal.
 
 ## Development Environment
 
@@ -14,10 +14,10 @@ Python version: 3.12
 ### Installation
 
 ```zsh
-git clone git@github.com:umd-lib/top-textbooks-service.git
-cd top-textbooks-service
+git clone git@github.com:umd-lib/equipment-availability-service.git
+cd equipment-availability-service
 pyenv install --skip-existing $(cat .python-version)
-python -m venv .venv --prompt textbooks
+python -m venv .venv --prompt equipment-availability
 source .venv/bin/activate
 pip install -r requirements.test.txt -e .
 ```
@@ -47,7 +47,7 @@ and make the following changes:
 To run the application in debug mode, with hot code reloading:
 
 ```zsh
-flask --app "textbooks.web:app(config='alma_config.yaml')" run
+flask --app "equipment_availability.web:app(config='alma_config.yaml')" run
 ```
 
 The microservice will be available at <http://localhost:5000/>,
@@ -57,7 +57,7 @@ To change the port, add `-p {port number}` to the `flask` command:
 
 ```zsh
 # for example, to run on port 8000
-flask --app "textbooks.web:app(config='alma_config.yaml')" run -p 8000
+flask --app "equipment_availability.web:app(config='alma_config.yaml')" run -p 8000
 ```
 
 ### Testing
@@ -104,7 +104,7 @@ Upon opening this codebase in VSCode:
 Build the image:
 
 ```zsh
-docker build -t docker.lib.umd.edu/top-textbooks-service:latest .
+docker build -t docker.lib.umd.edu/equipment-availability-service:latest .
 ```
 
 If you need to build for multiple architectures (e.g., AMD and ARM), you
@@ -114,17 +114,17 @@ to a Docker repository that you can push images to:
 
 ```zsh
 docker buildx build --builder local --platform linux/amd64,linux/arm64 \
-    -t docker.lib.umd.edu/top-textbooks-service:latest --push .
+    -t docker.lib.umd.edu/equipment-availability-service:latest --push .
 
 # then pull the image so it is available locally
-docker pull docker.lib.umd.edu/top-textbooks-service:latest
+docker pull docker.lib.umd.edu/equipment-availability-service:latest
 ```
 
 Run the container:
 
 ```zsh
 export ALMA_API_KEY=<Alma API Key>
-docker run --publish 5000:5000 --env ALMA_API_KEY=$ALMA_API_KEY docker.lib.umd.edu/top-textbooks-service:latest --alma_config=alma_config.yaml
+docker run --publish 5000:5000 --env ALMA_API_KEY=$ALMA_API_KEY docker.lib.umd.edu/equipment-availability:latest --alma_config=alma_config.yaml
 ```
 
 If you created a `.env` file (see [Configuration](#configuration)), you
@@ -133,7 +133,7 @@ can run the Docker image using that file.
 ```zsh
 docker run -p 5000:5000 \
     --env-file .env \
-    docker.lib.umd.edu/top-textbooks-service:latest --alma_config=alma_config.yaml
+    docker.lib.umd.edu/equipment-availability:latest --alma_config=alma_config.yaml
 ```
 
 [pytest]: https://docs.pytest.org/en/7.3.x/
