@@ -1,10 +1,8 @@
 import datetime
-import time
 from os import environ
 from typing import Any, Optional
 
 import dateutil.parser as dateparser
-import requests
 from bs4 import BeautifulSoup, ResultSet
 from bs4.element import Tag
 from core.gateway import HttpGateway
@@ -12,6 +10,7 @@ from core.logging import create_logger
 from dotenv import dotenv_values
 
 logger = create_logger(__name__)
+
 
 class AlmaLoanResponse:
     def __init__(self, mms_id: str, xmlResponse: str) -> None:
@@ -28,10 +27,8 @@ class AlmaLoanResponse:
         due_dates = []
         for raw_due_date in raw_due_dates:
             due_date_str = raw_due_date.text
-            # print(f"{due_date_str}")
             due_date = dateparser.parse(due_date_str)
             due_dates.append(due_date)
-        print(f'due_dates={due_dates}')
         return due_dates
 
     def getEarliestDueDateAfter(self, now: datetime.datetime) -> Optional[datetime.datetime]:
@@ -55,9 +52,9 @@ class AlmaGateway:
         self.api_key = environ.get('ALMA_API_KEY', '')
 
     def retrieveBibs(self, mms_ids: list[str]) -> ResultSet[Any]:
-        print(f'config={self.config}')
+        logger.debug(f'config={self.config}')
         unique_mms_ids = set(mms_ids)
-        print(f'# of unique mms_ids={len(unique_mms_ids)}')
+        logger.debug(f'# of unique mms_ids={len(unique_mms_ids)}')
         params = {
             'mms_id': ','.join(unique_mms_ids),
             'view': 'full',
@@ -74,17 +71,7 @@ class AlmaGateway:
         params = {'order_by': 'due_date', 'direction': 'asc', 'apikey': self.api_key}
         url = self.config['host'] + f'/almaws/v1/bibs/{mms_id}/loans'
         loans_response = HttpGateway.get(url, params)
-        # loan_due_dates = AlmaServerGateway.process_loans_response_for_due_dates(loans_response)
-        # return loans_response
         return AlmaLoanResponse(mms_id, loans_response.decode('UTF-8'))
-
-    # def getRequest(host, endpoint, params):
-    #     start_time = time.perf_counter()
-    #     r = requests.get(host + endpoint, params)
-    #     end_time = time.perf_counter()
-    #     elapsed_time_seconds = end_time - start_time
-    #     print(f'Request took {elapsed_time_seconds} seconds')
-    #     return r
 
 
 class EquipmentAvailability:
@@ -127,8 +114,8 @@ class AlmaBibProcessor:
             if total_items_count_field is not None:
                 total_items_count = int(total_items_count_field.text)
         except ValueError:
-            print(
-                f"WARNING: Non-numeric value '{total_items_count_field.text} in AVA subfield 'f' for mms_id: {mms_id}"
+            logger.warning(
+                f"Non-numeric value '{total_items_count_field.text} in AVA subfield 'f' for mms_id: {mms_id}"
             )
 
         unavailable_items_count = 0
@@ -136,8 +123,8 @@ class AlmaBibProcessor:
             if unavailable_items_count_field is not None:
                 unavailable_items_count = int(unavailable_items_count_field.text)
         except ValueError:
-            print(
-                f"WARNING: Non-numeric value '{unavailable_items_count_field.text} in AVA subfield 'g' for mms_id: {mms_id}"
+            logger.warning(
+                f"Non-numeric value '{unavailable_items_count_field.text} in AVA subfield 'g' for mms_id: {mms_id}"
             )
 
         available_count = total_items_count - unavailable_items_count
@@ -164,12 +151,15 @@ class AlmaBibProcessor:
         next_due_date = loanResponse.getEarliestDueDateAfter(now)
         return EquipmentAvailability(mms_id=mms_id, count=0, next_due_date=next_due_date, availability=availability)
 
+
 class EquipmentAvailabilityResponse:
-    def generateResponse(requested_mms_ids: list[str], equipment_availabilities: list[EquipmentAvailability]) -> list[dict]:
+    def generateResponse(
+        requested_mms_ids: list[str], equipment_availabilities: list[EquipmentAvailability]
+    ) -> list[dict]:
         response = []
 
         for e in equipment_availabilities:
-            due_date = e.next_due_date if e.next_due_date else ""
+            due_date = e.next_due_date if e.next_due_date else ''
             response.append({'mms_id': e.mms_id, 'count': e.count, 'due_date': due_date, 'status': e.availability})
 
         mms_ids_with_alma_response = set([e.mms_id for e in equipment_availabilities])
@@ -179,11 +169,11 @@ class EquipmentAvailabilityResponse:
 
         return response
 
+
 class EquipmentAvailabilityProcessor:
     def __init__(self, gateway: AlmaGateway, bibProcessor: AlmaBibProcessor):
         self.gateway = gateway
         self.bibProcessor = bibProcessor
-
 
     def process(self, requested_mms_ids: list[str], now: datetime.datetime) -> dict[str, dict]:
         bibs = self.gateway.retrieveBibs(requested_mms_ids)
