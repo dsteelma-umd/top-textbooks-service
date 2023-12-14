@@ -11,7 +11,7 @@
       "request": "launch",
       "module": "flask",
       "env": {
-        "FLASK_APP": "textbooks.web:app('alma_config.yaml')",
+        "FLASK_APP": "equipment_availability.web:app('alma_config.yaml')",
         "FLASK_DEBUG": "1"
       },
       "args": [

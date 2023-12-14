@@ -1,11 +1,12 @@
 [project]
-name = "top-textbooks-service"
+name = "equipment-availablity-service"
 version = "0.0.1"
 dependencies = [
     "beautifulsoup4",
     "flask",
     "jsonschema",
     "lxml",
+    "python-dateutil",
     "python-dotenv",
     "python-json-logger",
     "PyYAML",
@@ -23,7 +24,7 @@ test = [
     "pycodestyle"
 ]
 [project.scripts]
-top-textbooks-service = "textbooks.server:run"
+equipment-availability-service = "equipment_availability.server:run"
 
 [tool.ruff]
 line-length = 120
