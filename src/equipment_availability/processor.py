@@ -151,7 +151,10 @@ class AlmaBibProcessor:
         return EquipmentAvailability(mms_id=mms_id, count=0, next_due_date=next_due_date, availability=availability)
 
 
-class EquipmentAvailabilityResponse:
+class DrupalEquipmentAvailabilityResponse:
+    """
+    Generates the Equipment Availability response for use with Drupal
+    """
     def generateResponse(
         requested_mms_ids: list[str], equipment_availabilities: list[EquipmentAvailability]
     ) -> list[dict]:
@@ -183,4 +186,4 @@ class EquipmentAvailabilityProcessor:
             equipment_availability = self.bibProcessor.process(bib, now)
             equipment_availabilities.append(equipment_availability)
 
-        return EquipmentAvailabilityResponse.generateResponse(requested_mms_ids, equipment_availabilities)
+        return DrupalEquipmentAvailabilityResponse.generateResponse(requested_mms_ids, equipment_availabilities)
