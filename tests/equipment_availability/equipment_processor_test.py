@@ -68,6 +68,7 @@ def test_process_item_unavailable_with_due_date(requests_mock):
     processed_result = processor.process(mock_request, now)
     assert processed_result == expected_result
 
+
 def test_process_item_unavailable_with_due_date_is_past(requests_mock):
     mms_id = '990062909040108238'
     bibs_xml_response = resource_file_as_string(
