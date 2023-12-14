@@ -6,7 +6,7 @@ from equipment_availability.processor import AlmaBibProcessor, AlmaGateway, Equi
 
 def create_mock_config(mms_id=None):
     return {
-        'host': 'http://test.com',
+        'host': 'http://example.com',
         'retrieve_bibs_endpoint': '/almaws/v1/bibs',
         'retrieve_bib_loan_endpoint': '/almaws/v1/bibs/{MMS_ID}/loan'.format(MMS_ID=mms_id),
     }

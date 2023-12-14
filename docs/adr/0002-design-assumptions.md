@@ -76,6 +76,11 @@ The following design assumptions were made during initial development:
     known to Alma. In these cases, the response from the application will
     include those mms_ids, with a status of "no_data"
 
+5) The application will not implement caching of Alma responses, or responses
+   to clients. The expectation is that caching can likely be taken care of
+   elsewhere, either in Drupal, or using a separate Varnish cache, so it is
+   not necessary to complicate the applicaton with caching functionality.
+
 ## Consequences
 
 The above assumptions are largely about deferring complexity to a later date,
