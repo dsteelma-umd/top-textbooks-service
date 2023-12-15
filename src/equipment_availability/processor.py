@@ -52,10 +52,8 @@ class AlmaGateway:
 
     def retrieveBibs(self, mms_ids: list[str]) -> ResultSet[Any]:
         logger.debug(f'config={self.config}')
-        unique_mms_ids = set(mms_ids)
-        logger.debug(f'# of unique mms_ids={len(unique_mms_ids)}')
         params = {
-            'mms_id': ','.join(unique_mms_ids),
+            'mms_id': ','.join(mms_ids),
             'view': 'full',
             'expand': 'p_avail',
             'apikey': self.api_key,
@@ -156,7 +154,8 @@ class DrupalEquipmentAvailabilityResponse:
     Generates the Equipment Availability response for use with Drupal
     """
     def generateResponse(
-        requested_mms_ids: list[str], equipment_availabilities: list[EquipmentAvailability]
+        requested_mms_ids: list[str], ignored_mms_ids: list[str],
+        equipment_availabilities: list[EquipmentAvailability]
     ) -> list[dict]:
         response = {}
 
@@ -169,21 +168,42 @@ class DrupalEquipmentAvailabilityResponse:
         for mms_id in missing_mms_ids:
             response[mms_id] = {'count': 0, 'due': '', 'status': 'nodata'}
 
+        for mms_id in ignored_mms_ids:
+            response[mms_id] = {'count': 0, 'due': '', 'status': 'ignored'}
+
         print(f"response={response}")
         return response
 
 
 class EquipmentAvailabilityProcessor:
-    def __init__(self, gateway: AlmaGateway, bibProcessor: AlmaBibProcessor):
+    def __init__(self, config, gateway: AlmaGateway, bibProcessor: AlmaBibProcessor):
         self.gateway = gateway
         self.bibProcessor = bibProcessor
+        self.config = config
 
     def process(self, requested_mms_ids: list[str], now: datetime.datetime) -> dict[str, dict]:
-        bibs = self.gateway.retrieveBibs(requested_mms_ids)
+        unique_mms_ids = list(dict.fromkeys(requested_mms_ids))
+        logger.debug(f'# of unique mms_ids={len(unique_mms_ids)}')
+
+        ignored_mms_ids = []
+        retrieve_bibs_max_items = self.config['retrieve_bibs_max_items']
+        if len(unique_mms_ids) > retrieve_bibs_max_items:
+            ignored_mms_ids = unique_mms_ids[retrieve_bibs_max_items:]
+            logger.warning(
+              (
+                  f"{len(unique_mms_ids)} mms_ids requested. Limit is {retrieve_bibs_max_items}. "
+                  "{len(ignored_mms_ids)} will be ignored"
+              )
+            )
+            unique_mms_ids = unique_mms_ids[:retrieve_bibs_max_items]
+
+        bibs = self.gateway.retrieveBibs(unique_mms_ids)
         equipment_availabilities = []
 
         for bib in bibs:
             equipment_availability = self.bibProcessor.process(bib, now)
             equipment_availabilities.append(equipment_availability)
 
-        return DrupalEquipmentAvailabilityResponse.generateResponse(requested_mms_ids, equipment_availabilities)
+        return DrupalEquipmentAvailabilityResponse.generateResponse(
+            requested_mms_ids, ignored_mms_ids, equipment_availabilities
+        )

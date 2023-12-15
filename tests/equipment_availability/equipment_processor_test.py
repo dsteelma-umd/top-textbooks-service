@@ -9,6 +9,7 @@ def create_mock_config(mms_id=None):
         'host': 'http://example.com',
         'retrieve_bibs_endpoint': '/almaws/v1/bibs',
         'retrieve_bib_loan_endpoint': '/almaws/v1/bibs/{MMS_ID}/loan'.format(MMS_ID=mms_id),
+        'retrieve_bibs_max_items': 100
     }
 
 
@@ -28,7 +29,7 @@ def test_process_item_available(requests_mock):
     requests_mock.get(mock_retrieve_bibs_url, text=xml_response, status_code=200)
     mock_gateway = AlmaGateway(mock_config)
     bib_processor = AlmaBibProcessor(mock_gateway)
-    processor = EquipmentAvailabilityProcessor(mock_gateway, bib_processor)
+    processor = EquipmentAvailabilityProcessor(mock_config, mock_gateway, bib_processor)
 
     now = datetime.fromisoformat('2023-12-14T12:09:23+05:00')
     mock_request = ['990063177290108238']
@@ -59,7 +60,7 @@ def test_process_item_unavailable_with_due_date(requests_mock):
 
     mock_gateway = AlmaGateway(mock_config)
     bib_processor = AlmaBibProcessor(mock_gateway)
-    processor = EquipmentAvailabilityProcessor(mock_gateway, bib_processor)
+    processor = EquipmentAvailabilityProcessor(mock_config, mock_gateway, bib_processor)
 
     now = datetime.fromisoformat('2023-12-14T12:09:23+05:00')
     mock_request = [mms_id]
@@ -90,7 +91,7 @@ def test_process_item_unavailable_with_due_date_is_past(requests_mock):
 
     mock_gateway = AlmaGateway(mock_config)
     bib_processor = AlmaBibProcessor(mock_gateway)
-    processor = EquipmentAvailabilityProcessor(mock_gateway, bib_processor)
+    processor = EquipmentAvailabilityProcessor(mock_config, mock_gateway, bib_processor)
 
     # Now is later than the due date in the loan response
     now = datetime.fromisoformat('2024-01-01T12:09:23+05:00')
@@ -98,4 +99,33 @@ def test_process_item_unavailable_with_due_date_is_past(requests_mock):
     expected_result = {mms_id: {'count': 0, 'due': '', 'status': 'unavailable'}}
 
     processed_result = processor.process(mock_request, now)
+    assert processed_result == expected_result
+
+
+def test_process_excess_items(requests_mock):
+    requested_mms_ids = ['990063177290108238', '990048864890108238']
+
+    mock_config = create_mock_config()
+    mock_config['retrieve_bibs_max_items'] = 1
+
+    xml_response = resource_file_as_string(
+        'tests/resources/equipment_availability/retrieve_bibs_200_response_available.xml'
+    )
+
+    mock_retrieve_bibs_url = mock_config['host'] + mock_config['retrieve_bibs_endpoint']
+
+    requests_mock.get(mock_retrieve_bibs_url, text=xml_response, status_code=200)
+
+    mock_gateway = AlmaGateway(mock_config)
+    bib_processor = AlmaBibProcessor(mock_gateway)
+    processor = EquipmentAvailabilityProcessor(mock_config, mock_gateway, bib_processor)
+
+    now = datetime.fromisoformat('2023-12-14T12:09:23+05:00')
+
+    expected_result = {
+        '990063177290108238': {'count': 4, 'due': '', 'status': 'available'},
+        '990048864890108238': {'count': 0, 'due': '', 'status': 'ignored'}
+    }
+
+    processed_result = processor.process(requested_mms_ids, now)
     assert processed_result == expected_result

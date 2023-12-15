@@ -1,3 +1,13 @@
 host: "https://api-na.hosted.exlibrisgroup.com"
+
+# The Alma API "Retrieve Bibs" endpoint
 retrieve_bibs_endpoint: "/almaws/v1/bibs"
+
+# The maximum number of mms_ids that can be requested from the
+# Alma API "Retrieve Bibs" endpoint
+retrieve_bibs_max_items: 100
+
+# The Alma API "Retrieve Bib for Loan" endpoint
+# The "{MMS_ID}" parameter will be replaced programmatically by the mms_id
+# being requested
 retrieve_bib_loan_endpoint: "/almaws/v1/bibs/{MMS_ID}/loan"
