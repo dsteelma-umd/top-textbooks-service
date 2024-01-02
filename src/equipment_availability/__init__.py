@@ -1,3 +1,3 @@
 import importlib.metadata
 
-__version__ = importlib.metadata.version('equipment-availablity-service')
+__version__ = importlib.metadata.version('equipment-availability-service')

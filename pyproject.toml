@@ -1,5 +1,5 @@
 [project]
-name = "equipment-availablity-service"
+name = "equipment-availability-service"
 version = "0.0.1"
 dependencies = [
     "beautifulsoup4",
