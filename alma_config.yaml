@@ -10,4 +10,4 @@ retrieve_bibs_max_items: 100
 # The Alma API "Retrieve Bib for Loan" endpoint
 # The "{MMS_ID}" parameter will be replaced programmatically by the mms_id
 # being requested
-retrieve_bib_loan_endpoint: "/almaws/v1/bibs/{MMS_ID}/loan"
+retrieve_bib_loan_endpoint: "/almaws/v1/bibs/{MMS_ID}/loans"
