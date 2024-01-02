@@ -192,7 +192,7 @@ class EquipmentAvailabilityProcessor:
             logger.warning(
               (
                   f"{len(unique_mms_ids)} mms_ids requested. Limit is {retrieve_bibs_max_items}. "
-                  "{len(ignored_mms_ids)} will be ignored"
+                  "{len(ignored_mms_ids)} items will be ignored"
               )
             )
             unique_mms_ids = unique_mms_ids[:retrieve_bibs_max_items]
