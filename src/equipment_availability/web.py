@@ -27,7 +27,7 @@ def get_config(config_source: Optional[str | TextIO] = None) -> dict[str, Any]:
 def app(config: Optional[str | TextIO] = None) -> Flask:
     gateway = AlmaGateway(config=get_config(config))
     bibProcessor = AlmaBibProcessor(gateway)
-    equipmentAvailabilityProcessor = EquipmentAvailabilityProcessor(config, gateway, bibProcessor)
+    equipmentAvailabilityProcessor = EquipmentAvailabilityProcessor(gateway.config, gateway, bibProcessor)
     return _create_app(equipmentAvailabilityProcessor)
 
 
